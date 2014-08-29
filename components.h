@@ -28,7 +28,7 @@ struct PositionStruct {
 typedef struct InteractionStruct Interaction;
 
 struct InteractionStruct {
-    char text[1024];
+    void (*call)();
 };
 
 #endif

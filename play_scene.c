@@ -11,6 +11,13 @@ int world_width;
 int world_height;
 int player;
 
+void ground_call() {
+    char text[256] = "You are standing on a weathered, gray stone floor.";
+    for (int i = 0; i < strlen(text); i++) {
+	interface_draw(i, world_height, text[i], WHITE, BLACK);
+    }
+}
+
 void load_map() {
     FILE *map_file = fopen("map.txt", "r");
     char line[256];
@@ -22,12 +29,14 @@ void load_map() {
 	}
 	for (int i = 0; i < world_width; i++) {
 	    int tile = create_entity(&world);
-	    world.mask[tile] = COMPONENT_POSITION | COMPONENT_APPEARANCE;
+	    world.mask[tile] = COMPONENT_POSITION | COMPONENT_APPEARANCE |
+		               COMPONENT_INTERACTION;
 	    world.position[tile].x = i;
 	    world.position[tile].y = world_height;
 	    world.appearance[tile].chr = line[i];
 	    world.appearance[tile].fg = WHITE;
 	    world.appearance[tile].bg = BLACK;
+	    world.interaction[tile].call = &ground_call;
 	}
 	world_height += 1;
     }
@@ -77,6 +86,12 @@ void update_play_scene(int key) {
     }
     if (key == KEY_LEFT) {
 	world.position[player].x -= 1;
+    }
+    if (key == 'x') {
+	int tile_x = world.position[player].x;
+	int tile_y = world.position[player].y;
+	int tile = (tile_y * world_width) + tile_x;
+	world.interaction[tile].call();
     }
     for (int i = 0; i < MAX_ENTITIES; i++) {
 	draw_entity(i);
