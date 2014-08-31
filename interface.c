@@ -39,6 +39,11 @@ void interface_wipe() {
     clear();
 }
 
+void interface_clear_line(int y) {
+    move(y, 0);
+    clrtoeol();
+}
+
 void interface_uninit() {
     curs_set(1);
     endwin();

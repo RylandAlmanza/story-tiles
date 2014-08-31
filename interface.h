@@ -14,6 +14,7 @@ void interface_init();
 void interface_draw(int x, int y, char chr, int fg, int bg);
 void interface_flush();
 void interface_wipe();
+void interface_clear_line(int y);
 void interface_uninit();
 
 #endif

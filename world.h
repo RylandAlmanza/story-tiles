@@ -13,6 +13,7 @@ struct WorldStruct {
     Appearance appearance[MAX_ENTITIES];
     Position position[MAX_ENTITIES];
     Interaction interaction[MAX_ENTITIES];
+    Space space[MAX_ENTITIES];
 };
 
 int create_entity(World *world);
