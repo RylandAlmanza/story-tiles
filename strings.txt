@@ -3,3 +3,5 @@ You are standing on a weathered, gray, stone floor
 These walls seem to have stood the test of time
 This arrow on the floor points to the only door in this room
 You have complete control over who uses this doorway. Unless you're smaller.
+You open the door
+You close the door behind you

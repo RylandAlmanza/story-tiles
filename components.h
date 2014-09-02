@@ -29,7 +29,9 @@ struct PositionStruct {
 typedef struct InteractionStruct Interaction;
 
 struct InteractionStruct {
-    void (*call)(int entity);
+    void (*on_enter)(int self, int other);
+    void (*call)(int self, int other);
+    void (*on_exit)(int self, int other);
 };
 
 typedef struct SpaceStruct Space;

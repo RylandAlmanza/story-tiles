@@ -8,4 +8,6 @@ void load_strings() {
     fgets(WALL_DESCRIPTION, 256, string_file);
     fgets(ARROW_DESCRIPTION, 256, string_file);
     fgets(DOOR_DESCRIPTION, 256, string_file);
+    fgets(DOOR_ENTER_NOTIFICATION, 256, string_file);
+    fgets(DOOR_EXIT_NOTIFICATION, 256, string_file);
 }

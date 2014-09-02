@@ -12,20 +12,48 @@ int world_width;
 int world_height;
 int player;
 
-void ground_call(int entity) {
+void do_nothing(int self, int other) {};
+
+void ground_call(int self, int other) {
+    if (other != player) {
+	return;
+    }
     interface_write(0, world_height, FLOOR_DESCRIPTION);
 }
 
-void wall_call(int entity) {
+void wall_call(int self, int other) {
+    if (other != player) {
+	return;
+    }
     interface_write(0, world_height, WALL_DESCRIPTION);
 }
 
-void arrow_call(int entity) {
+void arrow_call(int self, int other) {
+    if (other != player) {
+	return;
+    }
     interface_write(0, world_height, ARROW_DESCRIPTION);
 }
 
-void door_call(int entity) {
+void door_call(int self, int other) {
+    if (other != player) {
+	return;
+    }
     interface_write(0, world_height, DOOR_DESCRIPTION);
+}
+
+void door_enter(int self, int other) {
+    if (other != player) {
+	return;
+    }
+    interface_write(0, world_height, DOOR_ENTER_NOTIFICATION);
+}
+
+void door_exit(int self, int other) {
+    if (other != player) {
+	return;
+    }
+    interface_write(0, world_height, DOOR_EXIT_NOTIFICATION);
 }
 
 void load_map() {
@@ -40,7 +68,9 @@ void load_map() {
 	}
 	for (int i = 0; i < world_width; i++) {
 	    int tile = create_entity(&world);
-	    void (*call)();
+	    void (*on_enter)(int self, int other) = &do_nothing;
+	    void (*call)(int self, int other) = &do_nothing;
+	    void (*on_exit)(int self, int other) = &do_nothing;
 	    int occupant = OCCUPANT_NONE;
 	    world.mask[tile] = COMPONENT_POSITION | COMPONENT_APPEARANCE |
 		               COMPONENT_INTERACTION | COMPONENT_SPACE;
@@ -61,7 +91,9 @@ void load_map() {
 		call = &arrow_call;
 	    }
 	    if (line[i] == '+') {
+		on_enter = &door_enter;
 		call = &door_call;
+		on_exit = &door_exit;
 	    }
 	    if (line[i] == '@') {
 		player_x = i;
@@ -69,7 +101,9 @@ void load_map() {
 		call = &ground_call;
 		world.appearance[tile].chr = '.';
 	    }
+	    world.interaction[tile].on_enter = on_enter;
 	    world.interaction[tile].call = call;
+	    world.interaction[tile].on_exit = on_exit;
 	    world.space[tile].occupant = occupant;
 	}
 	world_height++;
@@ -105,6 +139,8 @@ int move_entity_by(int entity, int x_delta, int y_delta) {
     world.space[new_tile].occupant = entity;
     world.position[entity].x = new_x;
     world.position[entity].y = new_y;
+    world.interaction[old_tile].on_exit(old_tile, entity);
+    world.interaction[new_tile].on_enter(new_tile, entity);
     return -1;
 }
     
@@ -151,13 +187,13 @@ void update_play_scene(int key) {
     }
     int blocking_entity = move_entity_by(player, x_delta, y_delta);
     if (blocking_entity >= 0) {
-	world.interaction[blocking_entity].call(blocking_entity);
+	world.interaction[blocking_entity].call(blocking_entity, player);
     }
     if (key == 'x') {
 	int tile_x = world.position[player].x;
 	int tile_y = world.position[player].y;
 	int tile = (tile_y * world_width) + tile_x;
-	world.interaction[tile].call(tile);
+	world.interaction[tile].call(tile, player);
     }
     for (int i = 0; i < MAX_ENTITIES; i++) {
 	draw_entity(i);
