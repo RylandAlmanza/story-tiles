@@ -12,6 +12,7 @@ static const int TRANSPARENT = -1;
 
 void interface_init();
 void interface_draw(int x, int y, char chr, int fg, int bg);
+void interface_write(int x, int y, char string[]);
 void interface_flush();
 void interface_wipe();
 void interface_clear_line(int y);

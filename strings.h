@@ -1,0 +1,12 @@
+#ifndef STRINGS_H
+#define STRINGS_H
+
+char START_TEXT[256];
+char FLOOR_DESCRIPTION[256];
+char WALL_DESCRIPTION[256];
+char ARROW_DESCRIPTION[256];
+char DOOR_DESCRIPTION[256];
+
+void load_strings();
+
+#endif

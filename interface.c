@@ -1,3 +1,4 @@
+#include <string.h>
 #include "interface.h"
 
 int get_color_pair(int fg, int bg) {
@@ -28,6 +29,15 @@ void interface_draw(int x, int y, char chr, int fg, int bg) {
     int attribute = COLOR_PAIR(get_color_pair(fg, bg));
     attron(attribute);
     mvaddch(y, x, chr);
+    attroff(attribute);
+}
+
+void interface_write(int x, int y, char string[]) {
+    int attribute = COLOR_PAIR(get_color_pair(WHITE, BLACK));
+    attron(attribute);
+    for (int i = 0; i < strlen(string); i++) {
+	mvaddch(y, x + i, string[i]);
+    }
     attroff(attribute);
 }
 

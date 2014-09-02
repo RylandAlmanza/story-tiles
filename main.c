@@ -2,8 +2,10 @@
 #include "scene.h"
 #include "start_scene.h"
 #include "play_scene.h"
+#include "strings.h"
 
 int main() {
+    load_strings();
     interface_init();
     game_over = false;
     start_start_scene();
